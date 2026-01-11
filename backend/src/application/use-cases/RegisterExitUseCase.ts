@@ -1,0 +1,53 @@
+import { Movement, MovementType } from '../../domain/entities/Movement';
+import { IMovementRepository } from '../../domain/repositories/IMovementRepository';
+import { IProductRepository } from '../../domain/repositories/IProductRepository';
+import { CreateMovementDTO, MovementResponseDTO } from '../dtos/MovementDTO';
+
+export class RegisterExitUseCase {
+  constructor(
+    private readonly movementRepository: IMovementRepository,
+    private readonly productRepository: IProductRepository
+  ) {}
+
+  async execute(dto: CreateMovementDTO): Promise<MovementResponseDTO> {
+    const product = await this.productRepository.findById(dto.productId);
+    if (!product) {
+      throw new Error(`Product with id ${dto.productId} not found`);
+    }
+
+    // Check if there's enough stock
+    if (product.stock < dto.quantity) {
+      throw new Error(`Insufficient stock. Available: ${product.stock}, Requested: ${dto.quantity}`);
+    }
+
+    // Create movement
+    const movement = new Movement({
+      productId: dto.productId,
+      type: MovementType.EXIT,
+      quantity: dto.quantity,
+      reason: dto.reason,
+      reference: dto.reference,
+    });
+
+    // Update product stock
+    product.removeStock(dto.quantity);
+    await this.productRepository.update(product);
+
+    // Save movement
+    const savedMovement = await this.movementRepository.save(movement);
+
+    return this.toResponseDTO(savedMovement);
+  }
+
+  private toResponseDTO(movement: Movement): MovementResponseDTO {
+    return {
+      id: movement.id,
+      productId: movement.productId,
+      type: movement.type,
+      quantity: movement.quantity,
+      reason: movement.reason,
+      reference: movement.reference,
+      createdAt: movement.createdAt.toISOString(),
+    };
+  }
+}
