@@ -39,13 +39,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <div className="absolute bottom-4 left-4 right-4">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <p className="text-xs text-gray-400">Clean Architecture</p>
-          <p className="text-xs text-gray-500">DDD • SOLID • TypeScript</p>
-        </div>
-      </div>
     </aside>
   );
 }
