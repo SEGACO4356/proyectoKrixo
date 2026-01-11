@@ -103,7 +103,7 @@ export default function SalesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -115,13 +115,13 @@ export default function SalesPage() {
         title="Ventas"
         subtitle={`${sales.length} ventas realizadas`}
         action={
-          <Button onClick={handleOpenModal}>
+          <Button className="w-full sm:w-auto" onClick={handleOpenModal}>
             + Nueva Venta
           </Button>
         }
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6">
         {sales.length > 0 ? (
           <Card>
             <div className="overflow-x-auto">
@@ -222,7 +222,7 @@ export default function SalesPage() {
           {/* Add Products */}
           <div className="space-y-3">
             <h4 className="font-medium text-gray-900">Agregar Productos</h4>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <Select
                 options={availableProducts.map(p => ({ 
                   value: p.id, 
@@ -233,16 +233,18 @@ export default function SalesPage() {
                 placeholder="Selecciona un producto"
                 className="flex-1"
               />
-              <Input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                className="w-20"
-              />
-              <Button onClick={handleAddItem} disabled={!selectedProductId}>
-                +
-              </Button>
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                  className="w-24"
+                />
+                <Button onClick={handleAddItem} disabled={!selectedProductId}>
+                  +
+                </Button>
+              </div>
             </div>
           </div>
 

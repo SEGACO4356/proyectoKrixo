@@ -10,11 +10,16 @@ const navigation = [
   { name: 'Ventas', href: '/sales', icon: '💰' },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  className?: string;
+  onNavigate?: () => void;
+}
+
+export function Sidebar({ className = '', onNavigate }: SidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen p-4">
+    <aside className={`w-64 bg-gray-900 text-white p-4 ${className}`.trim()}>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-center">📦 Inventario</h1>
         <p className="text-gray-400 text-sm text-center mt-1">Sistema de Gestión</p>
@@ -27,6 +32,7 @@ export function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
+              onClick={() => onNavigate?.()}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                 isActive
                   ? 'bg-blue-600 text-white'

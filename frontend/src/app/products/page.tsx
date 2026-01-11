@@ -103,7 +103,7 @@ export default function ProductsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -115,13 +115,13 @@ export default function ProductsPage() {
         title="Productos"
         subtitle={`${products.length} productos en inventario`}
         action={
-          <Button onClick={() => handleOpenModal()}>
+          <Button className="w-full sm:w-auto" onClick={() => handleOpenModal()}>
             + Nuevo Producto
           </Button>
         }
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6">
         {/* Search */}
         <Card>
           <Input

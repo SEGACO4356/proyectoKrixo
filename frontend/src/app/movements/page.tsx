@@ -69,7 +69,7 @@ export default function MovementsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <LoadingSpinner size="lg" />
       </div>
     );
@@ -81,7 +81,7 @@ export default function MovementsPage() {
         title="Movimientos"
         subtitle="Registro de entradas y salidas de inventario"
         action={
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button variant="success" onClick={() => handleOpenModal('entry')}>
               + Entrada
             </Button>
@@ -92,7 +92,7 @@ export default function MovementsPage() {
         }
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-6">
         {movements.length > 0 ? (
           <Card>
             <div className="overflow-x-auto">
@@ -157,7 +157,7 @@ export default function MovementsPage() {
               title="No hay movimientos"
               description="Registra entradas y salidas de productos para verlos aquí"
               action={
-                <div className="flex gap-2 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
                   <Button variant="success" onClick={() => handleOpenModal('entry')}>
                     + Entrada
                   </Button>
