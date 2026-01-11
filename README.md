@@ -4,7 +4,7 @@ Aplicación completa de gestión de inventario desarrollada con **Clean Architec
 
 ## 🚀 Demo en Producción
 
-> **URL Pública:** [Por configurar después del despliegue]
+> **URL Pública:** [[Inventario]](https://frontend-production-ac8b.up.railway.app/)
 
 ## 📋 Tabla de Contenidos
 
