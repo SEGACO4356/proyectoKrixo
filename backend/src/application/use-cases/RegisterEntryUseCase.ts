@@ -12,7 +12,7 @@ export class RegisterEntryUseCase {
   async execute(dto: CreateMovementDTO): Promise<MovementResponseDTO> {
     const product = await this.productRepository.findById(dto.productId);
     if (!product) {
-      throw new Error(`Product with id ${dto.productId} not found`);
+      throw new Error(`Producto con ID ${dto.productId} no encontrado`);
     }
 
     // Create movement

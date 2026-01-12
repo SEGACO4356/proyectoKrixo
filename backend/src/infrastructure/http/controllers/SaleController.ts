@@ -52,6 +52,17 @@ export class SaleController {
       res.status(201).json({ success: true, data: sale });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
+      
+      // Check if it's a stock-related error
+      if (message.includes('Insufficient stock') || message.includes('not found')) {
+        res.status(400).json({ 
+          success: false, 
+          error: message,
+          code: message.includes('Insufficient stock') ? 'INSUFFICIENT_STOCK' : 'PRODUCT_NOT_FOUND'
+        });
+        return;
+      }
+      
       res.status(400).json({ success: false, error: message });
     }
   }

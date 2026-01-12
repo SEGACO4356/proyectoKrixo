@@ -14,6 +14,7 @@ import {
 } from '@/presentation/components/ui';
 import { useProducts } from '@/application/hooks';
 import type { CreateProductInput, Product } from '@/domain/entities';
+import { showSuccessAlert, showErrorAlert, showWarningAlert, showConfirmAlert } from '@/infrastructure/utils/alerts';
 
 const categories = [
   { value: 'electronics', label: 'Electrónica' },
@@ -75,28 +76,67 @@ export default function ProductsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validaciones
+    if (!formData.name.trim()) {
+      showWarningAlert('El nombre del producto es obligatorio');
+      return;
+    }
+
+    if (!formData.sku.trim()) {
+      showWarningAlert('El SKU del producto es obligatorio');
+      return;
+    }
+
+    if (formData.price <= 0) {
+      showWarningAlert('El precio debe ser mayor a 0');
+      return;
+    }
+
+    if (formData.stock < 0) {
+      showWarningAlert('El stock no puede ser negativo');
+      return;
+    }
+
+    if (!formData.category) {
+      showWarningAlert('Por favor selecciona una categoría');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       if (editingProduct) {
         await updateProduct(editingProduct.id, formData);
+        await showSuccessAlert('Producto actualizado correctamente', '¡Actualizado!');
       } else {
         await createProduct(formData);
+        await showSuccessAlert('Producto creado correctamente', '¡Creado!');
       }
       handleCloseModal();
     } catch (err) {
-      console.error('Error saving product:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al guardar el producto';
+      await showErrorAlert(errorMessage, 'Error al Guardar');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
+    const confirmed = await showConfirmAlert(
+      'Esta acción no se puede deshacer',
+      '¿Eliminar producto?',
+      'Sí, eliminar',
+      'Cancelar'
+    );
+
+    if (confirmed) {
       try {
         await deleteProduct(id);
+        await showSuccessAlert('Producto eliminado correctamente', '¡Eliminado!');
       } catch (err) {
-        console.error('Error deleting product:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Error al eliminar el producto';
+        await showErrorAlert(errorMessage, 'Error al Eliminar');
       }
     }
   };

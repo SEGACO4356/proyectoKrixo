@@ -1,182 +1,245 @@
 # 📦 Sistema de Inventario - Clean Architecture
 
-Aplicación completa de gestión de inventario desarrollada con **Clean Architecture**, **DDD (Domain-Driven Design)**, y principios **SOLID**.
+Sistema completo de gestión de inventario desarrollado con **Clean Architecture**, **DDD (Domain-Driven Design)**, y principios **SOLID**. Incluye frontend responsive, backend RESTful, migraciones automáticas de base de datos y despliegue en producción.
 
 ## 🚀 Demo en Producción
 
-> **URL Pública:** [[Inventario]](https://frontend-production-ac8b.up.railway.app/)
+> **Frontend:** https://frontend-production-ac8b.up.railway.app  
+> **Backend API:** https://backend-production-0c9c.up.railway.app  
+> **Health Check:** https://backend-production-0c9c.up.railway.app/api/health
+
+**Desplegado en Railway** con PostgreSQL, Docker y migraciones automáticas.
 
 ## 📋 Tabla de Contenidos
 
 - [Características](#-características)
 - [Tecnologías](#-tecnologías)
 - [Arquitectura](#-arquitectura)
-- [Instalación](#-instalación)
+- [Instalación Local](#-instalación-local)
 - [Docker](#-docker)
+- [Migraciones de Base de Datos](#-migraciones-de-base-de-datos)
 - [API Endpoints](#-api-endpoints)
-- [Uso de IA](#-uso-de-ia)
+- [Despliegue](#-despliegue)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 
 ## ✨ Características
 
-### Gestión de Inventario
-- ✅ **Productos**: CRUD completo de productos con SKU, precio, stock y categorías
-- ✅ **Entradas**: Registro de entradas de inventario con trazabilidad
-- ✅ **Salidas**: Registro de salidas con validación de stock disponible
-- ✅ **Ventas**: Sistema de ventas con múltiples productos
-- ✅ **Dashboard**: Estadísticas en tiempo real del inventario
-- ✅ **Alertas de Stock Bajo**: Notificación de productos con stock mínimo
+### Funcionalidades del Sistema
+- ✅ **Dashboard en Tiempo Real**: Estadísticas, alertas de stock bajo, métricas de ventas e inventario
+- ✅ **Gestión de Productos**: CRUD completo con SKU, precio, stock, categorías y validaciones
+- ✅ **Control de Movimientos**: Registro de entradas y salidas con trazabilidad completa
+- ✅ **Sistema de Ventas**: Ventas multi-producto con cálculo automático y actualización de stock
+- ✅ **Alertas Inteligentes**: Notificaciones de productos con stock bajo o agotados
+- ✅ **Búsqueda y Filtros**: Búsqueda por nombre, SKU o categoría en tiempo real
 
-### Arquitectura y Buenas Prácticas
-- ✅ **Clean Architecture**: Separación clara de capas (Domain, Application, Infrastructure)
-- ✅ **DDD**: Entidades de dominio con reglas de negocio encapsuladas
-- ✅ **SOLID**: Principios aplicados en toda la base de código
-- ✅ **TypeScript**: Tipado estricto en frontend y backend
-- ✅ **Migraciones Automáticas**: Sistema de migraciones tipo Laravel/Rails
+### Características Técnicas
+- ✅ **Clean Architecture**: Separación clara en 4 capas (Domain, Application, Infrastructure, Presentation)
+- ✅ **DDD**: Entidades con lógica de negocio encapsulada y repositorios abstractos
+- ✅ **SOLID**: Todos los principios aplicados (SRP, OCP, LSP, ISP, DIP)
+- ✅ **TypeScript Estricto**: Tipado end-to-end en frontend y backend
+- ✅ **Migraciones Automáticas**: Sistema de versionado de BD tipo Laravel/Rails
+- ✅ **Responsive Design**: UI móvil con drawer sidebar y grids adaptables
+- ✅ **PostgreSQL**: Base de datos relacional con transacciones y connection pooling
+- ✅ **Docker Ready**: Contenedores para desarrollo y producción
+- ✅ **CI/CD**: Despliegue automático en Railway con GitHub
 
 ## 🛠 Tecnologías
 
 ### Frontend
-- **Next.js 15** - Framework React con App Router
-- **TypeScript** - Tipado estático
-- **Tailwind CSS** - Estilos utilitarios
-- **React Hooks** - Estado y efectos personalizados
+- **Next.js 16** - Framework React con App Router y Turbopack
+- **TypeScript 5** - Tipado estático estricto
+- **Tailwind CSS 4** - Estilos utilitarios con modo responsive
+- **React 19** - Hooks, Suspense y Server Components
+- **Custom Hooks** - Gestión de estado y lógica reutilizable
 
 ### Backend
-- **Node.js** - Runtime de JavaScript
-- **Express 5** - Framework web
-- **TypeScript** - Tipado estático
-- **PostgreSQL** - Base de datos relacional con migraciones automáticas
-- **pg** - Cliente de PostgreSQL para Node.js
-- **UUID** - Generación de identificadores únicos
+- **Node.js 20** - Runtime moderno de JavaScript
+- **Express 5** - Framework web minimalista
+- **TypeScript 5** - Tipado estático end-to-end
+- **PostgreSQL** - Base de datos relacional con ACID
+- **pg 8** - Cliente PostgreSQL nativo con connection pooling
+- **dotenv** - Gestión de variables de entorno
+- **UUID** - Identificadores únicos distribuidos
 
-### DevOps
-- **Docker** - Contenerización
-- **Docker Compose** - Orquestación de servicios
+### DevOps & Deployment
+- **Docker** - Contenerización de servicios
+- **Docker Compose** - Orquestación multi-contenedor
+- **Railway** - PaaS para frontend, backend y PostgreSQL
+- **GitHub** - Control de versiones y CI/CD
 
 ## 🏗 Arquitectura
 
-### Clean Architecture + Migraciones Automáticas
+### Clean Architecture + DDD
+
+El proyecto implementa **Clean Architecture** con 4 capas claramente separadas y **Domain-Driven Design** para encapsular la lógica de negocio.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        PRESENTATION                             │
-│  (React Components, Pages, UI)                                  │
+│                    PRESENTATION LAYER                           │
+│  • React Components (UI, Layout)                                │
+│  • Pages (Dashboard, Products, Movements, Sales)               │
+│  • Responsive Design (Mobile drawer, adaptive grids)           │
 ├─────────────────────────────────────────────────────────────────┤
-│                        APPLICATION                               │
-│  (Use Cases, Hooks, Services)                                   │
+│                    APPLICATION LAYER                            │
+│  • Use Cases (CreateProduct, RegisterSale, etc.)              │
+│  • Custom Hooks (useProducts, useSales, useDashboard)         │
+│  • DTOs (Data Transfer Objects)                                │
 ├─────────────────────────────────────────────────────────────────┤
-│                          DOMAIN                                  │
-│  (Entities, Repositories Interfaces, Value Objects)            │
+│                       DOMAIN LAYER                              │
+│  • Entities (Product, Movement, Sale) + Business Rules        │
+│  • Repository Interfaces (IProductRepository, etc.)            │
+│  • Value Objects (validations, constraints)                    │
 ├─────────────────────────────────────────────────────────────────┤
-│                      INFRASTRUCTURE                              │
-│  (API Clients, Repository Implementations, Controllers)        │
-│                                                                  │
-│  📦 Database Layer:                                             │
-│    ├── Database.ts (Connection Pool)                           │
-│    ├── MigrationRunner.ts (Auto-migrations) ⭐                 │
-│    ├── PostgresRepositories                                     │
-│    └── migrations/                                              │
-│         ├── 001_initial_schema.sql                             │
-│         └── 00X_future_migrations.sql                          │
+│                   INFRASTRUCTURE LAYER                          │
+│  • HTTP (Controllers, Routes, Middlewares)                     │
+│  • Database (Connection Pool, Transactions)                    │
+│  • Repository Implementations:                                 │
+│    ├── In-Memory (para testing rápido)                        │
+│    └── PostgreSQL (producción)                                │
+│  • Migration System ⭐                                         │
+│    ├── MigrationRunner (auto-ejecuta al iniciar)             │
+│    ├── migrations/ (SQL versionados)                          │
+│    └── migrations table (tracking)                            │
 └─────────────────────────────────────────────────────────────────┘
-
-Flow de Migraciones al Iniciar:
-1. Server starts → 2. Connect to DB → 3. Run migrations → 4. Start API
 ```
 
-### Principios SOLID Aplicados
+### Flujo de Migraciones (Startup)
 
-| Principio | Aplicación |
-|-----------|------------|
-| **S**ingle Responsibility | Cada caso de uso tiene una única responsabilidad |
-| **O**pen/Closed | Entidades abiertas a extensión, cerradas a modificación |
-| **L**iskov Substitution | Repositorios implementan interfaces del dominio |
-| **I**nterface Segregation | Interfaces específicas para cada repositorio |
-| **D**ependency Inversion | Dependencia hacia abstracciones (interfaces) |
+```
+1. npm start
+   ↓
+2. Database.healthCheck()
+   ↓
+3. MigrationRunner.runPendingMigrations()
+   ├── Crea tabla `migrations` si no existe
+   ├── Lee archivos .sql ordenados (001, 002, ...)
+   ├── Compara con ejecutadas
+   ├── Ejecuta pendientes en transacción
+   └── Rollback automático si falla
+   ↓
+4. Express server.listen()
+```
 
-## 📦 Instalación
+### Principios SOLID Implementados
+
+| Principio | Implementación en el Proyecto |
+|-----------|-------------------------------|
+| **S**ingle Responsibility | Cada caso de uso tiene una única responsabilidad (ej: `CreateProductUseCase`) |
+| **O**pen/Closed | Entidades extendibles sin modificación (ej: `Product` puede agregar campos) |
+| **L**iskov Substitution | `PostgresProductRepository` y `InMemoryProductRepository` son intercambiables |
+| **I**nterface Segregation | Interfaces específicas (`IProductRepository`, `ISaleRepository`) |
+| **D**ependency Inversion | Use cases dependen de abstracciones (`IProductRepository`), no implementaciones |
+
+## 📦 Instalación Local
 
 ### Prerrequisitos
-- Node.js 20+
-- npm o yarn
-- Docker (opcional)
+- **Node.js 20+** (con npm)
+- **PostgreSQL 15+** (local o Docker)
+- **Git**
+- **Docker** (opcional, para ejecutar Postgres)
 
-### Desarrollo Local
+### Paso 1: Clonar el Repositorio
 
-1. **Clonar el repositorio**
 ```bash
-git clone <repo-url>
+git clone https://github.com/SEGACO4356/proyectoKrixo.git
 cd proyectoKrixo
 ```
 
-2. **Instalar dependencias del Backend**
+### Paso 2: Configurar PostgreSQL
+
+**Opción A: Con Docker (Recomendado)**
+
 ```bash
-cd backend
-npm install
+docker run -d \
+  --name krixo-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=inventory_db \
+  -p 5432:5432 \
+  postgres:15-alpine
 ```
 
-3. **Instalar dependencias del Frontend**
+**Opción B: PostgreSQL Local**
+
 ```bash
-cd ../frontend
-npm install
+# Crear base de datos
+createdb -U postgres inventory_db
 ```
 
-4. **Configurar variables de entorno**
+### Paso 3: Configurar Variables de Entorno
 
-Backend (`.env`):
+**Backend** - Crear `backend/.env`:
+
 ```env
+# Server
 PORT=3001
 NODE_ENV=development
+
+# Database
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/inventory_db
+
+# CORS
 CORS_ORIGIN=http://localhost:3000
-
-# Database (PostgreSQL)
-DATABASE_URL=postgresql://krixo:krixo_password@localhost:5432/krixo_inventory
-
-# Para desarrollo sin base de datos (In-Memory):
-# Deja DATABASE_URL vacío o comenta la línea
 ```
 
-Frontend (`.env.local`):
+**Frontend** - Crear `frontend/.env.local`:
+
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
-5. **Iniciar PostgreSQL (con Docker)**
+### Paso 4: Instalar Dependencias
 
 ```bash
-# Opción 1: Solo PostgreSQL
-docker run -d \
-  --name krixo-postgres \
-  -e POSTGRES_USER=krixo \
-  -e POSTGRES_PASSWORD=krixo_password \
-  -e POSTGRES_DB=krixo_inventory \
-  -p 5432:5432 \
-  postgres:15-alpine
+# Backend
+cd backend
+npm install
 
-# Opción 2: Usar Docker Compose
-docker-compose up -d postgres
+# Frontend
+cd ../frontend
+npm install
 ```
 
-**Nota**: Las migraciones se ejecutan automáticamente al iniciar el backend. No necesitas ejecutar scripts SQL manualmente.
+### Paso 5: Iniciar en Desarrollo
 
-6. **Iniciar en desarrollo**
-
-Terminal 1 - Backend:
+**Terminal 1 - Backend:**
 ```bash
 cd backend
 npm run dev
 ```
 
-Terminal 2 - Frontend:
+El backend iniciará en `http://localhost:3001` y ejecutará las migraciones automáticamente.
+
+**Terminal 2 - Frontend:**
 ```bash
 cd frontend
 npm run dev
 ```
 
-7. **Acceder a la aplicación**
-- Frontend: http://localhost:3000
-- API: http://localhost:3001/api
+El frontend iniciará en `http://localhost:3000`.
+
+### Paso 6: Verificar Instalación
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001/api/health
+- **PostgreSQL**: Conectar a `localhost:5432`
+
+### Comandos Útiles
+
+```bash
+# Ver estado de migraciones
+cd backend
+npm run migration:status
+
+# Build de producción
+npm run build
+
+# Ejecutar en producción
+npm start
+
+# Linter/Type check
+npm run type-check  # (si está configurado)
+```
 
 ## 🐳 Docker
 
@@ -315,73 +378,157 @@ Este proyecto fue desarrollado con apoyo de **GitHub Copilot (Claude)** como asi
 
 ## 🌐 Despliegue
 
-### Opciones de Despliegue Recomendadas
+### Despliegue en Railway (Implementado)
 
-#### 1. Railway (Recomendado)
-```bash
-# 1. Instalar Railway CLI
-npm i -g @railway/cli
+Este proyecto está actualmente desplegado en **Railway** con los siguientes servicios:
 
-# 2. Login
-railway login
+**🟢 Servicios Activos:**
+- **Frontend**: [frontend-production-ac8b.up.railway.app](https://frontend-production-ac8b.up.railway.app)
+- **Backend**: [backend-production-0c9c.up.railway.app](https://backend-production-0c9c.up.railway.app/api)
+- **PostgreSQL**: Base de datos administrada por Railway (us-west1)
 
-# 3. Crear proyecto
-railway init
+### Configuración de Railway
 
-# 4. Agregar PostgreSQL
-railway add postgresql
+#### 1. Backend Service
 
-# 5. Configurar variables de entorno
-railway variables set PORT=3001
-railway variables set CORS_ORIGIN=https://tu-frontend-url.railway.app
+**Build & Deploy:**
+- **Root Directory**: `backend`
+- **Builder**: Dockerfile
+- **Watch Paths**: `backend/**`
 
-# 6. Deploy
-railway up
-```
-
-#### 2. Render
-1. Conectar repositorio GitHub
-2. Crear PostgreSQL Database
-3. Crear Web Service para Backend
-   - Environment: Node
-   - Build Command: `cd backend && npm install && npm run build`
-   - Start Command: `cd backend && npm start`
-   - Environment Variables:
-     - `DATABASE_URL` (auto-configurado)
-     - `CORS_ORIGIN=https://tu-frontend-url.onrender.com`
-4. Crear Static Site para Frontend
-   - Build Command: `cd frontend && npm install && npm run build`
-   - Publish Directory: `frontend/out`
-
-#### 3. Docker en VPS (DigitalOcean, Linode, AWS EC2)
-```bash
-# Clonar repositorio
-git clone <tu-repo>
-cd proyectoKrixo
-
-# Configurar variables de entorno
-cp backend/.env.example backend/.env
-# Editar backend/.env con tus valores
-
-# Ejecutar con Docker Compose
-docker-compose up -d --build
-
-# Configurar nginx como reverse proxy (opcional)
-```
-
-### Variables de Entorno para Producción
-
-**Backend:**
+**Variables de Entorno:**
 ```env
 PORT=3001
 NODE_ENV=production
-CORS_ORIGIN=https://tu-frontend-url.com
-DATABASE_URL=postgresql://user:password@host:5432/database
+CORS_ORIGIN=https://frontend-production-ac8b.up.railway.app
+DATABASE_URL=${{Postgres.DATABASE_URL}}/api
 ```
 
-**Frontend:**
+⚠️ **Importante**: Railway proporciona `DATABASE_URL` automáticamente al agregar PostgreSQL. Asegúrate de agregar `/api` al final.
+
+**Healthcheck:**
+- Path: `/api/health`
+- Method: GET
+- Expected Response: `200 OK`
+
+#### 2. Frontend Service
+
+**Build & Deploy:**
+- **Root Directory**: `frontend`
+- **Builder**: Dockerfile
+- **Watch Paths**: `frontend/**`
+
+**Variables de Entorno:**
 ```env
-NEXT_PUBLIC_API_URL=https://tu-backend-url.com/api
+NEXT_PUBLIC_API_URL=https://backend-production-0c9c.up.railway.app/api
+```
+
+#### 3. PostgreSQL Database
+
+Railway provisiona automáticamente:
+- PostgreSQL 15
+- Almacenamiento persistente (SSD)
+- Backups automáticos
+- Variables de entorno inyectadas
+
+### Flujo de Deployment
+
+```
+1. Push a main branch
+   ↓
+2. Railway detecta cambios en backend/ o frontend/
+   ↓
+3. Build Docker image
+   ↓
+4. Ejecuta migraciones automáticas (backend)
+   ↓
+5. Deploy con zero downtime
+   ↓
+6. Health check verification
+```
+
+### Comandos Railway CLI
+
+```bash
+# Instalar CLI
+npm i -g @railway/cli
+
+# Login
+railway login
+
+# Seleccionar proyecto
+railway link
+
+# Ver logs en tiempo real
+railway logs --service backend
+railway logs --service frontend
+
+# Ejecutar comandos en producción
+railway run npm run migration:status
+
+# Ver variables de entorno
+railway variables
+
+# Agregar/modificar variable
+railway variables set CORS_ORIGIN=https://nuevo-url.railway.app
+```
+
+### Verificación de Deployment
+
+```bash
+# Backend health check
+curl https://backend-production-0c9c.up.railway.app/api/health
+
+# Ejemplo de respuesta exitosa:
+# {"status":"ok","database":"connected"}
+
+# Test de productos
+curl https://backend-production-0c9c.up.railway.app/api/products
+```
+
+### Troubleshooting
+
+#### Error: "CORS origin not allowed"
+✅ Verificar que `CORS_ORIGIN` no tenga trailing slash:
+```env
+# ❌ Incorrecto
+CORS_ORIGIN=https://frontend.railway.app/
+
+# ✅ Correcto
+CORS_ORIGIN=https://frontend.railway.app
+```
+
+#### Error: "database does not exist"
+✅ Asegurarse que `DATABASE_URL` incluya `/api`:
+```env
+DATABASE_URL=${{Postgres.DATABASE_URL}}/api
+```
+
+#### Error: "Cannot find module 'next'"
+✅ Verificar que `package.json` esté copiado en Dockerfile runner stage:
+```dockerfile
+COPY --from=builder /app/package.json ./package.json
+```
+
+### Costos Estimados Railway
+
+- **Starter Plan** (Hobby): $5/mes (500 horas ejecución)
+- **Developer Plan**: $20/mes (uso ilimitado)
+- PostgreSQL incluido en el plan
+
+### Variables de Entorno Completas
+
+**Backend (.env):**
+```env
+PORT=3001
+NODE_ENV=production
+CORS_ORIGIN=https://frontend-production-ac8b.up.railway.app
+DATABASE_URL=${{Postgres.DATABASE_URL}}/api
+```
+
+**Frontend (.env.local):**
+```env
+NEXT_PUBLIC_API_URL=https://backend-production-0c9c.up.railway.app/api
 ```
 
 ## 📁 Estructura del Proyecto
@@ -390,47 +537,157 @@ NEXT_PUBLIC_API_URL=https://tu-backend-url.com/api
 proyectoKrixo/
 ├── backend/
 │   ├── src/
-│   │   ├── domain/
-│   │   │   ├── entities/          # Product, Movement, Sale
-│   │   │   ├── repositories/      # Interfaces de repositorios
-│   │   │   └── value-objects/     # Money, Quantity
-│   │   ├── application/
-│   │   │   ├── dtos/              # Data Transfer Objects
-│   │   │   └── use-cases/         # Casos de uso
-│   │   ├── infrastructure/
-│   │   │   ├── database/          # PostgreSQL (Database, init.sql)
-│   │   │   ├── repositories/      # Implementaciones (In-Memory y Postgres)
+│   │   ├── domain/                    # 🎯 Capa de Dominio (Reglas de Negocio)
+│   │   │   ├── entities/
+│   │   │   │   ├── Product.ts         # Entidad Producto
+│   │   │   │   ├── Movement.ts        # Entidad Movimiento
+│   │   │   │   └── Sale.ts            # Entidad Venta
+│   │   │   ├── repositories/
+│   │   │   │   ├── IProductRepository.ts
+│   │   │   │   ├── IMovementRepository.ts
+│   │   │   │   └── ISaleRepository.ts
+│   │   │   └── value-objects/
+│   │   │       ├── Money.ts           # Value Object para dinero
+│   │   │       └── Quantity.ts        # Value Object para cantidad
+│   │   │
+│   │   ├── application/               # 🎯 Capa de Aplicación (Casos de Uso)
+│   │   │   ├── dtos/
+│   │   │   │   ├── CreateProductDto.ts
+│   │   │   │   ├── RegisterMovementDto.ts
+│   │   │   │   └── RegisterSaleDto.ts
+│   │   │   └── use-cases/
+│   │   │       ├── CreateProductUseCase.ts
+│   │   │       ├── UpdateProductUseCase.ts
+│   │   │       ├── DeleteProductUseCase.ts
+│   │   │       ├── GetProductsUseCase.ts
+│   │   │       ├── RegisterEntryUseCase.ts
+│   │   │       ├── RegisterExitUseCase.ts
+│   │   │       ├── RegisterSaleUseCase.ts
+│   │   │       └── GetDashboardStatsUseCase.ts
+│   │   │
+│   │   ├── infrastructure/            # 🎯 Capa de Infraestructura (Implementaciones)
+│   │   │   ├── database/
+│   │   │   │   ├── Database.ts        # Connection Pool Manager
+│   │   │   │   ├── MigrationRunner.ts # Sistema de migraciones automáticas
+│   │   │   │   └── migrations/        # SQL migrations versionados
+│   │   │   │       ├── 001_create_products.sql
+│   │   │   │       ├── 002_create_movements.sql
+│   │   │   │       └── 003_create_sales.sql
+│   │   │   │
+│   │   │   ├── repositories/
+│   │   │   │   ├── InMemoryProductRepository.ts
+│   │   │   │   ├── PostgresProductRepository.ts
+│   │   │   │   ├── InMemoryMovementRepository.ts
+│   │   │   │   ├── PostgresMovementRepository.ts
+│   │   │   │   ├── InMemorySaleRepository.ts
+│   │   │   │   └── PostgresSaleRepository.ts
+│   │   │   │
 │   │   │   └── http/
-│   │   │       ├── controllers/   # Controladores Express
-│   │   │       ├── routes/        # Definición de rutas
-│   │   │       └── middlewares/   # Error handling, logging
-│   │   └── index.ts               # Entry point
-│   ├── Dockerfile
-│   └── package.json
+│   │   │       ├── controllers/
+│   │   │       │   ├── HealthController.ts
+│   │   │       │   ├── ProductController.ts
+│   │   │       │   ├── MovementController.ts
+│   │   │       │   ├── SaleController.ts
+│   │   │       │   └── DashboardController.ts
+│   │   │       ├── routes/
+│   │   │       │   ├── index.ts       # Router principal
+│   │   │       │   ├── productRoutes.ts
+│   │   │       │   ├── movementRoutes.ts
+│   │   │       │   ├── saleRoutes.ts
+│   │   │       │   └── dashboardRoutes.ts
+│   │   │       └── middlewares/
+│   │   │           ├── errorHandler.ts
+│   │   │           └── logger.ts
+│   │   │
+│   │   └── index.ts                   # Entry point - Configuración Express
+│   │
+│   ├── Dockerfile                     # Multi-stage build con migraciones
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .env.example
+│
 ├── frontend/
 │   ├── src/
-│   │   ├── domain/
-│   │   │   ├── entities/          # Tipos e interfaces
-│   │   │   └── types/             # ApiResponse, etc.
-│   │   ├── application/
-│   │   │   └── hooks/             # useProducts, useSales, etc.
-│   │   ├── infrastructure/
-│   │   │   └── api/               # API Client y servicios
-│   │   ├── presentation/
+│   │   ├── domain/                    # 🎯 Capa de Dominio (Tipos)
+│   │   │   ├── entities/
+│   │   │   │   ├── Product.ts
+│   │   │   │   ├── Movement.ts
+│   │   │   │   └── Sale.ts
+│   │   │   └── types/
+│   │   │       ├── ApiResponse.ts
+│   │   │       └── PaginatedResponse.ts
+│   │   │
+│   │   ├── application/               # 🎯 Capa de Aplicación (Lógica)
+│   │   │   └── hooks/
+│   │   │       ├── useProducts.ts     # Hook para gestión de productos
+│   │   │       ├── useMovements.ts    # Hook para movimientos
+│   │   │       ├── useSales.ts        # Hook para ventas
+│   │   │       └── useDashboard.ts    # Hook para dashboard
+│   │   │
+│   │   ├── infrastructure/            # 🎯 Capa de Infraestructura (API)
+│   │   │   └── api/
+│   │   │       ├── apiClient.ts       # Cliente HTTP (fetch wrapper)
+│   │   │       ├── productService.ts
+│   │   │       ├── movementService.ts
+│   │   │       ├── saleService.ts
+│   │   │       └── dashboardService.ts
+│   │   │
+│   │   ├── presentation/              # 🎯 Capa de Presentación (UI)
 │   │   │   └── components/
-│   │   │       ├── layout/        # Sidebar, Header
-│   │   │       └── ui/            # Button, Card, Modal, etc.
-│   │   └── app/
-│   │       ├── page.tsx           # Dashboard
-│   │       ├── products/          # Gestión de productos
-│   │       ├── movements/         # Movimientos de inventario
-│   │       └── sales/             # Registro de ventas
-│   ├── Dockerfile
-│   └── package.json
-├── docker-compose.yml
-├── docker-compose.dev.yml
+│   │   │       ├── layout/
+│   │   │       │   ├── AppShell.tsx   # Layout principal con drawer mobile
+│   │   │       │   ├── Sidebar.tsx    # Sidebar responsive
+│   │   │       │   └── Header.tsx     # Header con breadcrumbs
+│   │   │       │
+│   │   │       └── ui/                # Componentes reutilizables
+│   │   │           ├── Button.tsx
+│   │   │           ├── Card.tsx
+│   │   │           ├── Modal.tsx
+│   │   │           ├── Input.tsx      # Input con fix dark mode
+│   │   │           ├── Select.tsx     # Select con fix dark mode
+│   │   │           ├── Table.tsx
+│   │   │           ├── Badge.tsx
+│   │   │           └── Loading.tsx
+│   │   │
+│   │   └── app/                       # Next.js App Router
+│   │       ├── layout.tsx             # Root layout con AppShell
+│   │       ├── page.tsx               # Dashboard (/)
+│   │       │
+│   │       ├── products/
+│   │       │   ├── page.tsx           # Lista de productos
+│   │       │   └── [id]/
+│   │       │       └── page.tsx       # Detalle de producto
+│   │       │
+│   │       ├── movements/
+│   │       │   └── page.tsx           # Registro de movimientos
+│   │       │
+│   │       └── sales/
+│   │           └── page.tsx           # Registro de ventas
+│   │
+│   ├── Dockerfile                     # Next.js standalone build
+│   ├── next.config.ts                 # Configuración Next.js
+│   ├── tailwind.config.ts             # Tailwind CSS 4
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .env.local.example
+│
+├── docker-compose.yml                 # Orquestación completa (Backend + Frontend + Postgres)
+├── docker-compose.dev.yml             # Ambiente de desarrollo
+├── .gitignore
 └── README.md
 ```
+
+### Características Clave del Proyecto
+
+✅ **Clean Architecture**: Separación en 4 capas (Domain, Application, Infrastructure, Presentation)  
+✅ **SOLID Principles**: Interfaces, inversión de dependencias, single responsibility  
+✅ **Domain-Driven Design**: Entidades ricas, Value Objects, Repository Pattern  
+✅ **Migraciones Automáticas**: MigrationRunner ejecuta SQL al iniciar  
+✅ **Responsive Design**: Mobile-first con drawer sidebar  
+✅ **Dark Mode Support**: Fixed input/select text color  
+✅ **TypeScript**: Type-safety en frontend y backend  
+✅ **Docker**: Multi-stage builds optimizados  
+✅ **Railway Deployment**: CI/CD automático con PostgreSQL  
 
 ## 📄 Licencia
 

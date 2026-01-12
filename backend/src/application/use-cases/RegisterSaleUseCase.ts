@@ -20,11 +20,11 @@ export class RegisterSaleUseCase {
     for (const item of dto.items) {
       const product = await this.productRepository.findById(item.productId);
       if (!product) {
-        throw new Error(`Product with id ${item.productId} not found`);
+        throw new Error(`Producto con ID ${item.productId} no encontrado`);
       }
 
       if (product.stock < item.quantity) {
-        throw new Error(`Insufficient stock for product ${product.name}. Available: ${product.stock}, Requested: ${item.quantity}`);
+        throw new Error(`Stock insuficiente para "${product.name}". Disponible: ${product.stock}, Solicitado: ${item.quantity}`);
       }
 
       const subtotal = product.price * item.quantity;

@@ -14,6 +14,7 @@ import {
 } from '@/presentation/components/ui';
 import { useSales, useProducts } from '@/application/hooks';
 import type { CreateSaleInput, CreateSaleItemInput } from '@/domain/entities';
+import { showSuccessAlert, showErrorAlert, showWarningAlert } from '@/infrastructure/utils/alerts';
 
 export default function SalesPage() {
   const { sales, loading, createSale, fetchSales } = useSales();
@@ -31,9 +32,28 @@ export default function SalesPage() {
 
   const handleAddItem = () => {
     const product = products.find(p => p.id === selectedProductId);
-    if (!product) return;
+    if (!product) {
+      showWarningAlert('Por favor selecciona un producto');
+      return;
+    }
 
+    if (quantity <= 0) {
+      showWarningAlert('La cantidad debe ser mayor a 0');
+      return;
+    }
+
+    // Check stock availability
     const existingItem = saleItems.find(item => item.productId === selectedProductId);
+    const totalQuantity = existingItem ? existingItem.quantity + quantity : quantity;
+    
+    if (totalQuantity > product.stock) {
+      showErrorAlert(
+        `Stock insuficiente. Disponible: ${product.stock}, Intentando agregar: ${totalQuantity}`,
+        'Stock Insuficiente'
+      );
+      return;
+    }
+
     if (existingItem) {
       setSaleItems(saleItems.map(item => 
         item.productId === selectedProductId 
@@ -76,7 +96,10 @@ export default function SalesPage() {
   };
 
   const handleSubmit = async () => {
-    if (saleItems.length === 0) return;
+    if (saleItems.length === 0) {
+      showWarningAlert('Debes agregar al menos un producto a la venta');
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -93,9 +116,16 @@ export default function SalesPage() {
 
       await createSale(saleData);
       await fetchProducts(); // Refresh products to update stock
+      
+      await showSuccessAlert(
+        `Venta registrada exitosamente. Total: $${calculateTotal().toLocaleString()}`,
+        '¡Venta Exitosa!'
+      );
+      
       handleCloseModal();
     } catch (err) {
-      console.error('Error creating sale:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al crear la venta';
+      await showErrorAlert(errorMessage, 'Error al Registrar Venta');
     } finally {
       setIsSubmitting(false);
     }

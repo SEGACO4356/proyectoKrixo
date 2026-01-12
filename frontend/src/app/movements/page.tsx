@@ -14,6 +14,7 @@ import {
 } from '@/presentation/components/ui';
 import { useMovements, useProducts } from '@/application/hooks';
 import type { CreateMovementInput } from '@/domain/entities';
+import { showSuccessAlert, showErrorAlert, showWarningAlert } from '@/infrastructure/utils/alerts';
 
 export default function MovementsPage() {
   const { movements, loading, error, registerEntry, registerExit, fetchMovements } = useMovements();
@@ -45,18 +46,56 @@ export default function MovementsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validaciones
+    if (!formData.productId) {
+      showWarningAlert('Por favor selecciona un producto');
+      return;
+    }
+
+    if (formData.quantity <= 0) {
+      showWarningAlert('La cantidad debe ser mayor a 0');
+      return;
+    }
+
+    if (!formData.reason.trim()) {
+      showWarningAlert('Por favor indica la razón del movimiento');
+      return;
+    }
+
+    // Para salidas, verificar stock disponible
+    if (movementType === 'exit') {
+      const product = products.find(p => p.id === formData.productId);
+      if (product && product.stock < formData.quantity) {
+        showErrorAlert(
+          `Stock insuficiente. Disponible: ${product.stock}, Intentando sacar: ${formData.quantity}`,
+          'Stock Insuficiente'
+        );
+        return;
+      }
+    }
+
     setIsSubmitting(true);
 
     try {
       if (movementType === 'entry') {
         await registerEntry(formData);
+        await showSuccessAlert(
+          `Se agregaron ${formData.quantity} unidades al inventario`,
+          '¡Entrada Registrada!'
+        );
       } else {
         await registerExit(formData);
+        await showSuccessAlert(
+          `Se retiraron ${formData.quantity} unidades del inventario`,
+          '¡Salida Registrada!'
+        );
       }
       await fetchProducts(); // Refresh products to update stock
       handleCloseModal();
     } catch (err) {
-      console.error('Error registering movement:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al registrar movimiento';
+      await showErrorAlert(errorMessage, 'Error al Registrar Movimiento');
     } finally {
       setIsSubmitting(false);
     }

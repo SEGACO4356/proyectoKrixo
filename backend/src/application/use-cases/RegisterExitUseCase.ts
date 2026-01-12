@@ -12,12 +12,12 @@ export class RegisterExitUseCase {
   async execute(dto: CreateMovementDTO): Promise<MovementResponseDTO> {
     const product = await this.productRepository.findById(dto.productId);
     if (!product) {
-      throw new Error(`Product with id ${dto.productId} not found`);
+      throw new Error(`Producto con ID ${dto.productId} no encontrado`);
     }
 
     // Check if there's enough stock
     if (product.stock < dto.quantity) {
-      throw new Error(`Insufficient stock. Available: ${product.stock}, Requested: ${dto.quantity}`);
+      throw new Error(`Stock insuficiente para este producto. Disponible: ${product.stock}, Solicitado: ${dto.quantity}`);
     }
 
     // Create movement
