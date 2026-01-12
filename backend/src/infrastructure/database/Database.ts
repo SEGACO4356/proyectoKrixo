@@ -8,9 +8,12 @@ class Database {
   private pool: Pool;
 
   private constructor() {
+    const databaseUrl = process.env.DATABASE_URL;
+    const isRailway = databaseUrl?.includes('railway.app');
+    
     this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      connectionString: databaseUrl,
+      ssl: isRailway ? { rejectUnauthorized: false } : false,
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
